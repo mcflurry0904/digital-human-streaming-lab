@@ -1,0 +1,8 @@
+logLevel: info
+rtspTransports: [tcp]
+rtmp: false
+hls: false
+srt: false
+paths:
+  all_others:
+    overridePublisher: false

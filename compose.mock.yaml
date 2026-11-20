@@ -1,0 +1,21 @@
+services:
+  console:
+    environment:
+      MOCK_ENABLED: "1"
+
+  mock:
+    build: ./apps/controller
+    environment:
+      LAB_KIND: video
+      MEDIA_DIR: /media
+      MAX_UPLOAD_BYTES: "${MAX_UPLOAD_BYTES:-536870912}"
+      RTSP_URL: "rtsp://mediamtx:8554/${STREAM_PATH:-live}"
+    volumes:
+      - video:/media
+    depends_on:
+      mediamtx:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  video:

@@ -1,0 +1,29 @@
+# Local configuration (including Vite mode files)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Dependencies and build outputs
+node_modules/
+dist/
+*.tsbuildinfo
+/apps/controller/streaminglab
+/apps/controller/streaminglab.exe
+
+# Local run files and logs
+/.check/
+*.log
+
+# Generated test fixtures and uploaded media
+/sample.mp4
+/sample.wav
+/sample.mp3
+/storage/audio/*
+/storage/video/*
+!/storage/audio/.gitkeep
+!/storage/video/.gitkeep
+
+# OS metadata
+.DS_Store
+Thumbs.db

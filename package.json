@@ -1,0 +1,28 @@
+{
+  "name": "digital-human-streaming-lab",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:console": "vite --mode console apps/console --config vite.config.ts",
+    "dev:player": "vite --mode player apps/player --config vite.config.ts",
+    "check": "tsc --noEmit",
+    "build:console": "vite build apps/console --config vite.config.ts",
+    "build:player": "vite build apps/player --config vite.config.ts",
+    "build": "npm run check && npm run build:console && npm run build:player"
+  },
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/material": "7.3.5",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.30",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.6"
+  }
+}

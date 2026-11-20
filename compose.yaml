@@ -1,0 +1,60 @@
+name: digital-human-streaming-lab
+
+services:
+  mediamtx:
+    build: ./services/mediamtx
+    environment:
+      MTX_API: "yes"
+      MTX_APIADDRESS: "127.0.0.1:9997"
+      MTX_WEBRTCLOCALUDPADDRESS: ":${ICE_UDP_PORT:-8189}"
+      MTX_WEBRTCADDITIONALHOSTS: "${ICE_HOSTS:-127.0.0.1}"
+    ports:
+      - "${RTSP_BIND:-127.0.0.1}:${RTSP_PORT:-8554}:8554/tcp"
+      - "${ICE_UDP_PORT:-8189}:${ICE_UDP_PORT:-8189}/udp"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9997/v3/paths/list"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  controller:
+    build: ./apps/controller
+    environment:
+      LAB_KIND: audio
+      MEDIA_DIR: /media
+      MAX_UPLOAD_BYTES: "${MAX_UPLOAD_BYTES:-536870912}"
+    volumes:
+      - audio:/media
+    restart: unless-stopped
+
+  console:
+    build:
+      context: .
+      dockerfile: deploy/web.Dockerfile
+      args:
+        WEB_APP: console
+    environment:
+      MOCK_ENABLED: "0"
+    ports:
+      - "${CONSOLE_BIND:-127.0.0.1}:${CONSOLE_PORT:-8080}:80"
+    depends_on:
+      controller:
+        condition: service_healthy
+    restart: unless-stopped
+
+  player:
+    build:
+      context: .
+      dockerfile: deploy/web.Dockerfile
+      args:
+        WEB_APP: player
+    environment:
+      STREAM_PATH: "${STREAM_PATH:-live}"
+      WHEP_URL: "${WHEP_URL:-}"
+    ports:
+      - "${PLAYER_BIND:-0.0.0.0}:${PLAYER_PORT:-8081}:80"
+    restart: unless-stopped
+
+volumes:
+  audio:
